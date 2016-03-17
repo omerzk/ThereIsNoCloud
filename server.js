@@ -119,6 +119,6 @@ app.post('/email',require('connect-ensure-login').ensureLoggedIn(),
         });
     });
 
-PORT = env.PORT || 3000;
+PORT =  3000;
 app.listen(PORT);
 console.log("app listening on:"+ PORT);
