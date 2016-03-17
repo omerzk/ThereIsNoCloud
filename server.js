@@ -7,7 +7,7 @@ var busboy = require('connect-busboy');
 
 //RECIPIENTS = ['samyon.ristov@mail.huji.ac.il.','wyaron@cs.huji.ac.il'];
 FROM = 'benjamin_netanyahu@prime_minister.gov.il';
-RECIPIENTS = ["omer.zaks@mail.huji.ac.il"];
+RECIPIENTS = ["omeryom@gmail.com"]//,"rom.cohen90@gmail.com"];//
 
 // Configure the local strategy for use by Passport.
 passport.use(new Strategy(
@@ -74,15 +74,15 @@ app.get('/login',
 app.post('/login',
     passport.authenticate('local', { failureRedirect: '/' , successRedirect:'/email'}));
 
-
-app.get('/email',require('connect-ensure-login').ensureLoggedIn(),
-    function(req, res){
-        res.render('email', { user: req.user });
-    });
+//demand authentication from this point on
+app.all('*',require('connect-ensure-login').ensureLoggedIn(),function(a,b,next){
+    next();
+});
+app.get('/email', function(req, res){res.render('email');});
 
 
 //sending the email
-//create the nodemailer tranport
+//create the mailgun tranport
 var mg = require('nodemailer-mailgun-transport');
 var auth = {
     auth: {
@@ -92,32 +92,44 @@ var auth = {
 };
 
 var transporter = require('nodemailer').createTransport(mg(auth));
+var pending = []
 
-
-app.post('/email',require('connect-ensure-login').ensureLoggedIn(),
+app.post('/email',
     function(req, res){
         req.pipe(req.busboy);//accumlate file
         req.busboy.on('file', function (fieldname, file, filename) {
             var localPath = 'Uploads/'+filename;
             var stream = fs.createWriteStream(localPath);
             file.pipe(stream);//save file
-            stream.on("close",function(){transporter.sendMail({
-                from: FROM,
-                to: RECIPIENTS,
-                subject: 'See attached',
-                text:"do not respond",
-                attachments:[{filename:filename, path:localPath}]
-            }, function (err,info) {
-                if(err)console.log(err);
-                else {
-                    console.log(JSON.stringify(info));
-                    res.send("success~")
-                }
-            });});
-            console.log("Uploaded: " + localPath);
+            stream.on("close",function(){
+                pending.push({filename:filename, path:localPath})
+                res.send("queued");
+                console.log("queued locally: " + JSON.stringify(pending));
+            });
+
 
         });
     });
+app.all("*",require('body-parser').json());
+app.get('/sendmail',
+    function(req, res){
+        var from = req.query.from;
+        var to = req.query.to;
+        transporter.sendMail({
+            from: from || FROM,
+            to: to || RECIPIENTS,
+            subject: 'See attached',
+            text:"do not respond",
+            attachments: pending
+}, function (err,info) {
+    if(err)res.status("400").send("either from or to are invalid");
+    else {
+        res.send("sent");
+        pending.map(function(elem){fs.unlink(elem.path);});//would like to remove but not sure if azure charges extra for space....
+        pending = [];
+
+}
+});});
 
 PORT = process.env.port || 1337;
 app.listen(PORT);

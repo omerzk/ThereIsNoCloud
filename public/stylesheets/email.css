@@ -10,4 +10,15 @@
 body{
     align-items:center;
     background-image: url("../images/Background.png");
+    justify-content:center;
+}
+button{
+    margin-left: 75%;
+    margin-top:60px;
+    width:10%;
+    height:50px;
+    background-color: #090013;
+    color:#55bcb6;
+    border: hidden;
+    opacity:20;
 }
