@@ -119,5 +119,5 @@ app.post('/email',require('connect-ensure-login').ensureLoggedIn(),
         });
     });
 
-
-app.listen(3000);
+PORT = env.PORT || 3000;
+app.listen(PORT);
