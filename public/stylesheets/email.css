@@ -1,0 +1,13 @@
+.dropzone{
+    margin-top: 170px;
+    alignment: center;
+    background-color: #55bcb6;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+body{
+    align-items:center;
+    background-image: url("../images/Background.png");
+}

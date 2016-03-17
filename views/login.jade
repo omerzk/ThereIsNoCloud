@@ -1,0 +1,10 @@
+html
+  head
+    link(rel="stylesheet" type="text/css" href="/static/stylesheets/login.css")
+  body
+    .login-page
+      .form
+        form(method="post" action="/").login-form
+          input(type='text', name="username" id="username" placeholder="Enter Username")
+          input(type="password" name="password" id ="password" placeholder="Enter Password")
+          button(type='submit') login

@@ -1,0 +1,18 @@
+//
+   Created by omer on 16/03/2016.
+
+doctype html
+html(lang="en")
+    head
+        link(rel="stylesheet" type="text/css" href="/static/stylesheets/dropzone.min.css")
+        link(rel="stylesheet" type="text/css" href="/static/stylesheets/email.css")
+        script(src="/static/javascripts/dropzone.min.js")
+    body
+        div.dropform
+            form(action="/email" id='FileUpload' class="dropzone" enctype="multipart/form-data")
+                div(class="dz-message")
+                img(src="/static/images/drop.png" id="dropimg")
+                div(class="fallback")
+                    input(type="file" multiple id="fileUpload" placeholder="drag file here")
+
+
