@@ -5,9 +5,8 @@ var db = require('./db');
 var fs = require('fs');
 var busboy = require('connect-busboy');
 
-//RECIPIENTS = ['samyon.ristov@mail.huji.ac.il.','wyaron@cs.huji.ac.il'];
 FROM = 'benjamin_netanyahu@prime_minister.gov.il';
-RECIPIENTS = ["omeryom@gmail.com"]//,"rom.cohen90@gmail.com"];//
+RECIPIENTS = ["RECIPIENT@gmail.com"]
 
 // Configure the local strategy for use by Passport.
 passport.use(new Strategy(
